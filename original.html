@@ -9,10 +9,6 @@
 
     <!-- CSS 디자인 부분 -->
     <style type="text/css">
-        table {
-            text-align: center;
-            margin: 0 auto;
-        }
         td {
             text-align: center;
             width: 50px;
@@ -21,45 +17,41 @@
             /* font-family: 굴림; */
             /* border:2px solid black; */
         }
+       
     </style>
 
     <!-- JS 코드 -->
     <script type="text/javascript">
-        const today = {
-            cur: new Date()
-        }  // 오늘 날짜. 내 컴 기준으로 today에 Date 객체를 넣어줌
-        const date = new Date();  // today의 Date를 세어줌
+        var today = new Date();  // 오늘 날짜. 내 컴 기준으로 today에 Date 객체를 넣어줌
+        var date = new Date();  // today의 Date를 세어줌
 
         // 이전 달 만들기
-        const prevCalendar = () => {
+        function prevCalendar() {
             // 이전 달을 today 값에 저장하고 달력에 넣음. -1해서
-            const cur = today.cur;
-            today.cur = new Date(cur.getFullYear(), cur.getMonth() - 1, cur.getDate());
+            today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
             buildCalendar();  // 달력에 cell 만들어 출력
         }
 
         // 다음 달 만들기
-        const nextCalendar = () => {
-            const cur = today.cur;
-            today.cur = new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate());
+        function nextCalendar() {
+            today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
             buildCalendar();
         }
 
         // 현재 달 달력 만들기
-        const buildCalendar = () => {
-            const cur = today.cur;
+        function buildCalendar() {
             // 이번 달의 첫째 날. new를 쓰면 로컬의 월을 받아옴(안쓰면 +1 해줘야함 0부터임)
-            const doMonth = new Date(cur.getFullYear(), cur.getMonth(), 1);
+            var doMonth = new Date(today.getFullYear(), today.getMonth(), 1);
             // 이번 달의 마지막 날. Month+1 하면 다음달인데 0으로 하면 전달 마지막일 가져옴
-            const lastDate = new Date(cur.getFullYear(), cur.getMonth()+1, 0);
+            var lastDate = new Date(today.getFullYear(), today.getMonth()+1, 0);
             // 날짜를 찍을 테이블 변수 만듦. 일 까지 다 찍음
-            const tbCalendar = document.getElementById("calendar");
+            var tbCalendar = document.getElementById("calendar");
             // 테이블에 정확한 날짜를 찍는 변수
-            const tbCalendarYM = document.getElementById("tbCalendarYM");
+            var tbCalendarYM = document.getElementById("tbCalendarYM");
 
             // new 를 찍지 않아서 +1 해줌
             // innerHTML 은 JS 언어를 HTML 권장 표준 언어로 바꿔줌
-            tbCalendarYM.innerHTML = cur.getFullYear() + "년 " + (cur.getMonth() + 1) + "월";
+            tbCalendarYM.innerHTML = today.getFullYear() + "년 " + (today.getMonth() + 1) + "월";
 
             // while 은 이번달이 끝나면 다음달로 넘겨주는 역할
             while (tbCalendar.rows.length > 2) {
@@ -69,26 +61,25 @@
                 // 날짜를 다 지운 상태로 다음 달 숫자 렌더링 하기위함!
             }
 
+            var row = null;
             // 테이블에 새로운 열 삽입 (초기화)
-            const rows = [];
-            rows.push(tbCalendar.insertRow());
-
+            row = tbCalendar.insertRow();
             // 셀의 갯수를 세어주는 cnt
-            let cnt = 0;
+            var cnt = 0;
 
             // 1 이 시작되는 칸을 맞추어 줌
-            for (let i=0; i < doMonth.getDay(); i++) {
+            for (i=0; i<doMonth.getDay(); i++) {
                 // 이번달의 day 만큼 돌림
-                rows[0].insertCell();  // 열 한칸한칸 계속 만들어줌
-                cnt++;  // 다음 열로 옮겨줌 피봇을
+                cell = row.insertCell();  // 열 한칸한칸 계속 만들어줌
+                cnt = cnt + 1;  // 다음 열로 옮겨줌 피봇을
             }
 
             // 달력 출력
-            for (let i=1; i<=lastDate.getDate(); i++) {
-                const cell = cnt < 7 ? rows[0].insertCell() : rows[rows.length - 1].insertCell();  // 열 한칸한칸 계속 만들어주는 역할
+            for (i=1; i<=lastDate.getDate(); i++) {
+                cell = row.insertCell();  // 열 한칸한칸 계속 만들어주는 역할
                 cell.innerHTML = i;  // 셀을 1부터 마지막 day 까지 HTML에 넣어줌
                 // 여기에 day-content 추가
-                cnt++;  // 열의 갯수를 계속 다음으로 위치하게 해주는 역할
+                cnt = cnt + 1;  // 열의 갯수를 계속 다음으로 위치하게 해주는 역할
 
                 // 일요일 구하기
                 if (cnt % 7 == 1) {
@@ -102,18 +93,18 @@
                     // 7요일을 7로 나눴을때 0 이 된느애가 토. (일월화수목금토 이므로)
                     cell.innerHTML = "<font color=blue>" + i
                     // 토요일은 다음에 올 셀을 추가해야됨
-
-                    rows.push(tbCalendar.insertRow());
+                    row = calendar.insertRow();
                 }
 
                 // 오늘 날짜에 노란색 표시하기
-                if (cur.getFullYear() == date.getFullYear()
-                && cur.getMonth() == date.getMonth()
+                if (today.getFullYear() == date.getFullYear()
+                && today.getMonth() == date.getMonth()
                 && i == date.getDate()) {
                     cell.bgColor = "yellow";
                 }
             }
         }
+
     </script>
 
 
@@ -121,36 +112,36 @@
 
 <body>
     <p></p>
-    <h3>영지의 달력 </h3>
+    <h3 align="center"> 영지의 달력 </h3>
 
     <!-- 이제 표 -->
-    <table id="calendar">
+    <table id="calendar" align="center">
 
 
         <!-- 위에 < 년 월 > 부분 -->
         <tr>
             <td>
-                <label id="prevBtn" onclick="prevCalendar()"> < </label> 
+                <label onclick="prevCalendar()"> < </label> 
             </td> 
-            <td   id="tbCalendarYM" colspan="5">
+            <td align="center" id="tbCalendarYM" colspan="5">
                 yyyy년 m월
             </td>
             <td>
-                <label id="nextBtn" onclick="nextCalendar()"> > </label>
+                <label onclick="nextCalendar()"> > </label>
             </td>
         </tr>
 
         <!-- 요일 부분 -->
         <tr>
-            <td  >
+            <td align="center">
                 <font color="red">일</font>
             </td>
-            <td  >월</td>
-            <td  >화</td>
-            <td  >수</td>
-            <td  >목</td>
-            <td  >금</td>
-            <td  >
+            <td align="center">월</td>
+            <td align="center">화</td>
+            <td align="center">수</td>
+            <td align="center">목</td>
+            <td align="center">금</td>
+            <td align="center">
                 <font color="blue">토</font>
             </td>
         </tr>

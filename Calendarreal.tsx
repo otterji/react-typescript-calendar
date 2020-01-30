@@ -54,7 +54,7 @@ class MainCalendar extends Component<Props, State> {
             tbCalendar.deleteRow(tbCalendar.rows.length - 1);
         }
 
-        const rows = [];`~`
+        const rows = [];
         rows.push(tbCalendar.insertRow());
 
         let cnt = 0;

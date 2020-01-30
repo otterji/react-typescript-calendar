@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Calendar from 'react-calendar';
-import { blue } from '@material-ui/core/colors';
 
 interface Props {
 }
